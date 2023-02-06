@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Zia </title>
+</head>
+<body>
+<form action="ZsApi" method="post" enctype="multipart/form-data">
+  <input type="file" name="file" multiple>
+  <input id="ajaxfile2" type="file" name="query"  accept="image/*"/>
+  <input type="submit" value="Upload">
+</form>
+
+<!-- <input id="ajaxfile" type="file" multiple accept="image/*" enctype="multipart/form-data"/> <br/>
+<input id="ajaxfile2" type="file"  accept="image/*"/> <br/>
+  <button> Upload </button>  -->
+  <!-- Ajax to Java File Upload Logic -->
+  <script>
+  let button = document.querySelector("button");
+  let ajaxfile = document.getElementById("ajaxfile");
+  
+  function uploadFile(){
+	// let ajaxf = document.getElementById("ajaxfile").files;
+	let ajaxf2 = document.getElementById("ajaxfile2").files;
+
+    var formData = new FormData(); 
+    formData.append("len",""+ajaxfile.files.length);
+    let count=0
+    Object.keys(ajaxf).forEach(key =>{
+    	formData.append("x"+count,ajaxf.item(key))
+    	count++;
+    })
+    formData.append("query",ajaxf2[0])
+    /* for (let i = 0;i<ajaxfile.files.length;i++){
+    	formData.append("x"+i,ajaxfile.files[i]);
+    } */
+    console.log(formData.getAll("x"));
+    fetch('ZsApi', {
+      method: "POST", 
+      body: formData
+    }).then(e => e.text()).then(r => console.log(r)); 
+
+    
+    
+   /*  formData.append("x",ajaxfile.files[0]);
+    console.log(formData);
+    fetch('GetImage', {
+      method: "POST", 
+      body: formData
+    }).then(e => e.text()).then(r => console.log(r));  */
+    
+    
+    
+    
+  
+  }
+  button.onclick = uploadFile;
+  
+  </script>
+</body>
+</html>
