@@ -29,33 +29,91 @@ public class GetImage extends HttpServlet {
 	public static long folderNum = 0; 
 	public static String query_Image;
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		long start = System.currentTimeMillis();
 		Part filePart = request.getPart("query"); 
 		String queryFileName = filePart.getSubmittedFileName();
-		System.out.println(queryFileName);
 		if((queryFileName.endsWith(".png"))|| (queryFileName.endsWith(".jpg")) || (queryFileName.endsWith(".jpeg"))) {
-		filePart.write("/home/ashwanth/picsave/"+ File.separator +queryFileName);	
-		query_Image="/home/ashwanth/picsave/"+queryFileName;
-		ZiaApiCall.WorkerThread.queryImage="/home/ashwanth/picsave/"+queryFileName;
+		filePart.write("/home/ashwanth/picsave/"+queryFileName);	
+		ApiCall.WorkerThread.quer="/home/ashwanth/picsave/"+queryFileName;
 		}
 		else {
 			response.getWriter().println("Query File format not supported");
 		}
+		List<String> arr = new ArrayList<String>(); 
 		Collection<Part> parts = request.getParts();
 		for (Part part : parts) {
+			
 		    if ((!part.getName().equals("file"))) {
 		        continue;
 		    }
 		    if(part.getName().equals("file") && part.getContentType().startsWith("image/") ) {
-			    String fileName = getFileName(part);
+			    String fileName = "/home/ashwanth/picsave/"+ getFileName(part);
+
 			    if((fileName.endsWith(".png"))|| (fileName.endsWith(".jpg")) || (fileName.endsWith(".jpeg"))){
-			    System.out.println(fileName);
-			    part.write("/home/ashwanth/picsave/"
-			    + File.separator
-			    + fileName);	
+
+			    try {
+					part.write(fileName);
+					System.out.println("Thread Started");
+					arr.add(fileName);
+					
+
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					System.out.println("Query File not saved");
+
+				}	
 			    }
 		    }
 		}
+					
+		
+//		try {
+////		response.getWriter().println(new ZiaApiCall().responseMethod(parts));
+//		}
+//		catch (Exception e) {
+//			System.out.println("ee");
+//		}
+//		response.getWriter().println("Success1");
+		long end = System.currentTimeMillis();
+        System.out.println("Counting to 10000000 takes " +
+                                    (end - start) + "ms");
+		response.getWriter().println("success");
+		
+		
+		
+		ApiCall obj= new ApiCall();
+		String res = null;
+		try {   
+			res=obj.callmethod(arr);
+		} catch (InterruptedException e) {
+//			 TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		response.getWriter().println("The file uploaded sucessfully."+res);
+//	  long end=System.currentTimeMillis();*/
+//	  System.out.println(end-start);
 	}
+		
+	
+
+
+		
+//		for (Part part : parts) {
+//		    if ((!part.getName().equals("file"))) {
+//		        continue;
+//		    }
+//		    if(part.getName().equals("file") && part.getContentType().startsWith("image/") ) {
+//			    String fileName = getFileName(part);
+//			    if((fileName.endsWith(".png"))|| (fileName.endsWith(".jpg")) || (fileName.endsWith(".jpeg"))){
+//			    System.out.println(fileName);
+////			    part.write("/home/ashwanth/picsave/"
+////			    + File.separator
+////			    + fileName);	
+////			    
+//			    }
+//		    }
+			    
+	
 		private static String getFileName(Part part) {
 		    for (String contentDisposition : part.getHeader("content-disposition").split(";")) {
 		        if (contentDisposition.trim().startsWith("filename")) {
@@ -64,6 +122,7 @@ public class GetImage extends HttpServlet {
 		    }
 		    return null;
 		}}
+//		}}
 	
 //		 List<Part> fileParts = new ArrayList<Part>();
 //	        for (Part part : request.getParts()) {
@@ -266,17 +325,4 @@ public class GetImage extends HttpServlet {
 	  
 			  
   
-	/*	ApiCall obj= new ApiCall();
-		String res = null;*/
-//		try {   
-//			res=obj.callmethod(arr);
-//		} catch (InterruptedException e) {
-//			 TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-	 /* response.getWriter().println("The file uploaded sucessfully."+res);
-	  long end=System.currentTimeMillis();*/
-//	  System.out.println(end-start);
-	
-
-
+		
