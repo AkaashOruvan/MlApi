@@ -31,15 +31,18 @@ public class GetImage extends HttpServlet {
 	public static String query_Image;
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		long start = System.currentTimeMillis();
+		boolean errorOccured=false;
 		
 		Part filePart = request.getPart("query"); 
 		String queryFileName = filePart.getSubmittedFileName();
 		if((queryFileName.endsWith(".png"))|| (queryFileName.endsWith(".jpg")) || (queryFileName.endsWith(".jpeg"))) {
 		filePart.write("/home/ashwanth/picsave/"+queryFileName);	
+		System.out.println("yes1");
 		
 		ApiCall.WorkerThread.quer="/home/ashwanth/picsave/"+queryFileName;
 		}
 		else {
+			errorOccured=true;
 			response.getWriter().println("Either Query File format not supported or empty Query File");
 		}
 		List<String> arr = new ArrayList<String>(); 
@@ -57,7 +60,6 @@ public class GetImage extends HttpServlet {
 
 			    try {
 					part.write(fileName);
-					System.out.println("Thread Started");
 					arr.add(fileName);
 					
 
@@ -70,10 +72,11 @@ public class GetImage extends HttpServlet {
 		    }
 		    }
 		    catch (Exception e) {
+		    	errorOccured=true;
 		    	response.getWriter().println("Either Source File format not supported or Empty source image");
 		    }
 		}
-		System.out.println("saved");	
+	
 		
 //		try {
 ////		response.getWriter().println(new ZiaApiCall().responseMethod(parts));
@@ -85,6 +88,7 @@ public class GetImage extends HttpServlet {
 		long end = System.currentTimeMillis();
         System.out.println("Counting to 10000000 takes " +
                                     (end - start) + "ms");
+        System.out.println(arr.toString());
 		
 		
 		
@@ -92,10 +96,8 @@ public class GetImage extends HttpServlet {
 		ApiCall obj= new ApiCall();
 		String res = null;
 		try {   
-			if(queryFileName==null) {
-				response.getWriter().println("Empty query image");
-			}
-			else if(arr.size()>0) {
+			if(errorOccured==false) {
+				System.out.println("here");
 				res=obj.callmethod(arr);
 				response.getWriter().println(res);
 				
