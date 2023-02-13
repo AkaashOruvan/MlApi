@@ -58,7 +58,7 @@ public class ApiCall {
 	        	//PLan b starts
 	        	CloseableHttpClient httpclient = HttpClients.createDefault();
 	        	HttpPost httpPost = new HttpPost("https://dl.zoho.com/cv/face/compare");
-	        	httpPost.addHeader("Authorization", "Bearer " + "1000.c61d5cd78656910e344c93cbdcc58ec8.d718023e1f6cf37eaf9a61b1db8a6456");
+	        	httpPost.addHeader("Authorization", "Bearer " + "1000.a16bf2e2f7b91273e7930c36be4b0118.1f7abb1a0769a53219974b1c4a05c1e7");
 	  //      	  FileBody query_image = new FileBody(new File("/home/ashwanth/" + "temp.png"));	
 	        	File queryImageFile = new File(quer);
 //	        	File queryImageFile = new File("/home/ashwanth/Desktop/rajsan.jpeg");
